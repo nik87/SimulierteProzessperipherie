@@ -25,19 +25,20 @@ import werkzeug.BildImplementierung;
 public class SensorTeingabe extends JFrame {
 
   private ImageIcon icon;
-  private JFrame sensorFrame = new JFrame("SensorTextfeld");
+  private JFrame sensorFrame;
   private JPanel sensorPanel = new JPanel();
   private JLabel sensorLabel = new JLabel();
-  private JTextField sensorEingabe = new JTextField("TempWert?");
+  private JTextField eingabe_Tfield = new JTextField("TempWert?");
   BildImplementierung bildkonf = new BildImplementierung();
-  SensorRechnen senorR = new SensorRechnen();
+  Sensor senor = new Sensor();
 
   /**
    * Standardkonstruktor der Klasse SensorJFrame. Liesst den eingetragenden
    * Wert aus und gibt ihn in der Konsole aus.
    */
 
-  public SensorTeingabe() {
+  public SensorTeingabe(String name) {
+	  sensorFrame = new JFrame(name);
     try {
       // Quelle des Bildes:
 	    // http://www.pce-instruments.com/deutsch/messtechnik-im-online-handel/messgeraete-fuer-alle-parameter/handtachometer-wachendorff-prozesstechnik-gmbh-laser-handtachometer-pce-155-det_11639.htm
@@ -51,22 +52,22 @@ public class SensorTeingabe extends JFrame {
   	sensorPanel.setLayout(null);
   	sensorPanel.setSize(200, 200);
   	sensorPanel.setBackground(Color.GRAY);
-  	sensorEingabe.setBounds(10, 100, 70, 20);
+  	eingabe_Tfield.setBounds(10, 100, 70, 20);
   	bildkonf.skalieren(icon);
   	sensorLabel.setBounds(0, 0, 100, 100);
   	sensorLabel.setIcon(icon);
-  	sensorPanel.add(sensorEingabe);
+  	sensorPanel.add(eingabe_Tfield);
   	sensorPanel.add(sensorLabel);
   	sensorFrame.add(sensorPanel);
   	sensorFrame.setVisible(true);
   }
 
   public void setKeyListener(KeyListener l) {
-    sensorEingabe.addKeyListener(l);
+    eingabe_Tfield.addKeyListener(l);
   }
 
   public void setMouseListener(MouseListener m) {
-    sensorEingabe.addMouseListener(m);
+    eingabe_Tfield.addMouseListener(m);
   }
 
   public void print() {
@@ -81,12 +82,12 @@ public class SensorTeingabe extends JFrame {
     public void keyPressed(KeyEvent e) {
 	    if (e.getKeyCode() == KeyEvent.VK_ENTER) {
         try {
-          int i = Integer.valueOf(sensorEingabe.getText().trim()).intValue();
-          senorR.setTemperatur(i);
+          int i = Integer.valueOf(eingabe_Tfield.getText().trim()).intValue();
+          senor.setTemperatur(i);
         } catch (NumberFormatException nfe) {
           System.out.println("NumberFormatException: " + nfe.getMessage());
         }
-        senorR.printTemp();
+        senor.printTemp();
 	    }
     }
 
@@ -98,8 +99,8 @@ public class SensorTeingabe extends JFrame {
 
   	@Override
   	public void mouseClicked(MouseEvent e) {
-      if (sensorEingabe.getText().equals("TempWert?"))
-  		sensorEingabe.setText("");
+      if (eingabe_Tfield.getText().equals("TempWert?"))
+  		eingabe_Tfield.setText("");
   	}
 
   	@Override

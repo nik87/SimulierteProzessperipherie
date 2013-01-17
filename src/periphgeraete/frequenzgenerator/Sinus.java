@@ -1,4 +1,4 @@
-package periphgeraete.frequenzabtasten;
+package periphgeraete.frequenzgenerator;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;

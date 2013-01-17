@@ -31,28 +31,28 @@ public class SensorSlider extends JFrame implements MouseListener {
 
   private ImageIcon icon;
 
-  private JFrame sensorFrame = new JFrame("SensorSlider");
+  private JFrame sensorFrame;
   private JPanel sensorPanel = new JPanel();
   private JLabel sensorLabel = new JLabel();
-  private JLabel sensorLabel1 = new JLabel("min");
-  private JLabel sensorLabel2 = new JLabel("max");
-  private JLabel sensorLabel3 = new JLabel("aktuelle Temperatur");
+  private JLabel min_Label = new JLabel("min");
+  private JLabel max_Label = new JLabel("max");
+  private JLabel aktTemp_Label = new JLabel("aktuelle Temperatur");
   private JSlider sensorSlider = new JSlider();
-  private JTextField aktuelleTemp = new JTextField();
-  private JTextField setSliderMinTemp = new JTextField("min");
-  private JTextField setSliderMaxTemp = new JTextField("max");
+  private JTextField aktuelleTemp_Tfield = new JTextField();
+  private JTextField minTemp_Tfield = new JTextField("min");
+  private JTextField maxTemp_Tfield = new JTextField("max");
   private ChangeListener listener;
 
   BildImplementierung bildkonf = new BildImplementierung();
-  SensorRechnen senorR = new SensorRechnen();
+  Sensor senor = new Sensor();
 
   /**
    * Der Standardkonstruktor der Klasse SensorJSlider,
    * bietet die Moeglichkeit den Wertebereich des JSliders
    * in der GUI ein zu stellen.
    */
-  public SensorSlider() {
-
+  public SensorSlider(String name) {
+	  sensorFrame = new JFrame(name);
     try {
 	    // Quelle des Bildes:
 	    // http://www.pce-instruments.com/deutsch/messtechnik-im-online-handel/messgeraete-fuer-alle-parameter/handtachometer-wachendorff-prozesstechnik-gmbh-laser-handtachometer-pce-155-det_11639.htm
@@ -67,14 +67,14 @@ public class SensorSlider extends JFrame implements MouseListener {
   	sensorPanel.setLayout(null);
   	sensorPanel.setSize(250, 200);
   	sensorPanel.setBackground(Color.GRAY);
-  	aktuelleTemp.setBounds(100, 115, 25, 20);
+  	aktuelleTemp_Tfield.setBounds(100, 115, 25, 20);
 
-  	setSliderMinTemp.setBounds(100, 80, 30, 25);
-  	setSliderMinTemp.setBackground(Color.green);
-  	setSliderMinTemp.addMouseListener(this);
-  	setSliderMaxTemp.setBounds(140, 80, 30, 25);
-  	setSliderMaxTemp.setBackground(Color.RED);
-  	setSliderMaxTemp.addMouseListener(this);
+  	minTemp_Tfield.setBounds(100, 80, 30, 25);
+  	minTemp_Tfield.setBackground(Color.green);
+  	minTemp_Tfield.addMouseListener(this);
+  	maxTemp_Tfield.setBounds(140, 80, 30, 25);
+  	maxTemp_Tfield.setBackground(Color.RED);
+  	maxTemp_Tfield.addMouseListener(this);
 
   	listener = new ChangeListener() {
       @Override
@@ -82,15 +82,15 @@ public class SensorSlider extends JFrame implements MouseListener {
   		  // Textfeld aktualisieren, wenn sich Schieberegler aendert
 
     		JSlider source = (JSlider) event.getSource();
-    		aktuelleTemp.setText(String.valueOf(source.getValue()));
-    		minimum = Integer.parseInt(setSliderMinTemp.getText());
-    		maximum = Integer.parseInt(setSliderMaxTemp.getText());
+    		aktuelleTemp_Tfield.setText(String.valueOf(source.getValue()));
+    		minimum = Integer.parseInt(minTemp_Tfield.getText());
+    		maximum = Integer.parseInt(maxTemp_Tfield.getText());
 
     		sensorSlider.setMinimum(minimum);
     		sensorSlider.setMaximum(maximum);
 
-    		senorR.setTemperatur(source.getValue());
-    		senorR.printTemp();
+    		senor.setTemperatur(source.getValue());
+    		senor.printTemp();
       }
     };
 
@@ -106,18 +106,18 @@ public class SensorSlider extends JFrame implements MouseListener {
 
   	bildkonf.skalieren(icon);
   	sensorLabel.setBounds(0, 0, 100, 100);
-  	sensorLabel1.setBounds(100, 60, 70, 20);
-  	sensorLabel2.setBounds(140,60,70,20);
-  	sensorLabel3.setBounds(130, 115, 120, 20);
+  	min_Label.setBounds(100, 60, 70, 20);
+  	max_Label.setBounds(140,60,70,20);
+  	aktTemp_Label.setBounds(130, 115, 120, 20);
   	sensorLabel.setIcon(icon);
 
-  	sensorPanel.add(setSliderMinTemp);
-  	sensorPanel.add(setSliderMaxTemp);
-  	sensorPanel.add(aktuelleTemp);
+  	sensorPanel.add(minTemp_Tfield);
+  	sensorPanel.add(maxTemp_Tfield);
+  	sensorPanel.add(aktuelleTemp_Tfield);
   	sensorPanel.add(sensorLabel);
-  	sensorPanel.add(sensorLabel1);
-  	sensorPanel.add(sensorLabel2);
-  	sensorPanel.add(sensorLabel3);
+  	sensorPanel.add(min_Label);
+  	sensorPanel.add(max_Label);
+  	sensorPanel.add(aktTemp_Label);
   	sensorPanel.add(sensorSlider);
   	sensorFrame.add(sensorPanel);
   	sensorFrame.setVisible(true);
@@ -148,17 +148,17 @@ public class SensorSlider extends JFrame implements MouseListener {
     sensorPanel.setLayout(null);
     sensorPanel.setSize(200, 200);
     sensorPanel.setBackground(Color.GRAY);
-    aktuelleTemp.setBounds(100, 115, 25, 20);
+    aktuelleTemp_Tfield.setBounds(100, 115, 25, 20);
 
     listener = new ChangeListener() {
 	    @Override
 	    public void stateChanged(ChangeEvent event) {
     		// Textfeld aktualisieren, wenn sich Schieberegler aendert
     		JSlider source = (JSlider) event.getSource();
-    		aktuelleTemp.setText(String.valueOf(source.getValue()));
+    		aktuelleTemp_Tfield.setText(String.valueOf(source.getValue()));
 
-    		senorR.setTemperatur(source.getValue());
-    		senorR.printTemp();
+    		senor.setTemperatur(source.getValue());
+    		senor.printTemp();
 
     		sensorSlider.setMinimum(minimum);
     		sensorSlider.setMaximum(maximum);
@@ -180,7 +180,7 @@ public class SensorSlider extends JFrame implements MouseListener {
   	sensorLabel.setBounds(0, 0, 100, 100);
   	sensorLabel.setIcon(icon);
 
-  	sensorPanel.add(aktuelleTemp);
+  	sensorPanel.add(aktuelleTemp_Tfield);
   	sensorPanel.add(sensorLabel);
   	sensorPanel.add(sensorSlider);
   	sensorFrame.add(sensorPanel);
@@ -193,16 +193,16 @@ public class SensorSlider extends JFrame implements MouseListener {
    * @return  die aktuelle Temperatur
    */
   public int getAktuellenWert() {
-    return senorR.getTemp();
+    return senor.getTemp();
   }
 
   @Override
   public void mouseClicked(MouseEvent e) {
-    if (setSliderMinTemp.getText().equals("min"))
-      setSliderMinTemp.setText("");
+    if (minTemp_Tfield.getText().equals("min"))
+      minTemp_Tfield.setText("");
 
-    if (setSliderMaxTemp.getText().equals("max"))
-      setSliderMaxTemp.setText("");
+    if (maxTemp_Tfield.getText().equals("max"))
+      maxTemp_Tfield.setText("");
   }
 
   @Override

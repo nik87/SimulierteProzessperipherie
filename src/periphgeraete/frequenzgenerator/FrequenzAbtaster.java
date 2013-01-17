@@ -1,4 +1,4 @@
-package periphgeraete.frequenzabtasten;
+package periphgeraete.frequenzgenerator;
 
 /**
  * @author Niklas Knauer

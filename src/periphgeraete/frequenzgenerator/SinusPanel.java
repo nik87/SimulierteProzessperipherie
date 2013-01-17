@@ -1,4 +1,4 @@
-package periphgeraete.frequenzabtasten;
+package periphgeraete.frequenzgenerator;
 
 import java.awt.*;
 import java.awt.font.FontRenderContext;
