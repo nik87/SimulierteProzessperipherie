@@ -7,8 +7,8 @@ package periphgeraete.sensor;
  */
 public class SensorRechnen {
 
-  private static final String degree = "/u00b0";
-  private static final String ae     = "/u00e4";
+  private static final String degree = "\u00b0";
+  private static final String ae     = "\u00e4";
 
   private int startwert;
   private int solltemperatur;

@@ -69,7 +69,7 @@ class SinusPanel extends JPanel implements Runnable, Stroke {
   private void berechneSinusKurve() {
   	for (int i = 0; i < y.length; i++) {
 	    y[i] = (float) Math.sin(Math.toRadians(i));
-	    System.out.println("y:" + y[i]);
+	    // System.out.println("y:" + y[i]);
 	    // x[i] = i;
   	}
   }
@@ -83,12 +83,12 @@ class SinusPanel extends JPanel implements Runnable, Stroke {
 
   private void generiereVariertenSinus() {
   	for (int winkel = 0; winkel < sinus.length; winkel++) {
-	    System.out.println(winkel);
+	    // System.out.println(winkel);
 	    sinus[winkel] = (int) (amplitude * Math.sin(Math
 		    .toRadians(berechneOmega() * zeit + phasenverschiebung)));
 	    dyachse[winkel] = 150 - (int) (amplitude * Math.sin(Math
 		    .toRadians(berechneOmega() * zeit + phasenverschiebung)));
-	    System.out.println("varirierter Sinus: " + sinus[winkel]);
+	    // System.out.println("varirierter Sinus: " + sinus[winkel]);
 	    zeit = zeit + schrittweite;
 	    dxachse[winkel] = winkel + 21;
   	}

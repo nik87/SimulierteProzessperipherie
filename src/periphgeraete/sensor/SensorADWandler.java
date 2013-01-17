@@ -1,23 +1,12 @@
 package periphgeraete.sensor;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.io.IOException;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerListModel;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -30,15 +19,17 @@ import werkzeug.BildImplementierung;
  */
 public class SensorADWandler {
 
-  private static final String degree = "/u00b0";
+  private static final String degree = "\u00b0";
+  private static final String oe     = "\u00f6";
+  private static final String ae     = "\u00e4";
 
   private ImageIcon icon;
-  private JFrame sensorFrame = new JFrame("AD-Wandler");
+  private JFrame f;
   private JPanel sensorPanel = new JPanel();
   private JLabel sensorLabel = new JLabel();
-  private JLabel spinnerLabel1 = new JLabel("Aufloesung:");
+  private JLabel spinnerLabel1 = new JLabel("Aufl"+oe+"sung:");
   private JLabel spinnerLabel2 = new JLabel("Max. Temp.:");
-  private JLabel spinnerLabel3 = new JLabel("Verstaerkung:");
+  private JLabel spinnerLabel3 = new JLabel("Verst"+ae+"rkung:");
   private JLabel spinnerLabel4 = new JLabel("Bit");
   private JLabel spinnerLabel5 = new JLabel(degree + "C");
   private JLabel spinnerLabel6 = new JLabel("V");
@@ -58,6 +49,10 @@ public class SensorADWandler {
 
 
   public SensorADWandler(String methode) {
+
+    f = new JFrame("AD-Wandler");
+    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
   	switch (methode) {
       case "textfield":
         rufeEingabeMitTextfeldAuf();
@@ -69,22 +64,20 @@ public class SensorADWandler {
   }
 
   private void rufeEingabeMitTextfeldAuf() {
-    try {
-	    // Quelle des Bildes:
-	    // http://www.pce-instruments.com/deutsch/messtechnik-im-online-handel/messgeraete-fuer-alle-parameter/handtachometer-wachendorff-prozesstechnik-gmbh-laser-handtachometer-pce-155-det_11639.htm
-	    icon = bildkonf.getImageIcon("Sensor");
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  	sensorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-  	sensorFrame.setSize(400, 200);
+    // icon = bildkonf.getImageIcon("Sensor");
+
+  	f.setSize(400, 200);
+
   	sensorPanel.setLayout(null);
   	sensorPanel.setSize(200, 200);
-  	sensorPanel.setBackground(Color.orange);
+  	sensorPanel.setBackground(Color.ORANGE);
+
   	sensorEingabe.setBounds(40, 100, 70, 20);
-  	bildkonf.skalieren(icon);
+
+  	// bildkonf.skalieren(icon);
+    // sensorLabel.setIcon(icon);
   	sensorLabel.setBounds(25, 0, 100, 100);
-  	sensorLabel.setIcon(icon);
+
   	spinnerLabel1.setBounds(130, 10, 70, 20);
   	spinnerLabel2.setBounds(130,32,70,20);
   	spinnerLabel3.setBounds(130, 54, 110, 20);
@@ -113,20 +106,25 @@ public class SensorADWandler {
   	sensorPanel.add(sensorEingabe);
   	sensorPanel.add(sensorLabel);
 
-  	sensorFrame.add(sensorPanel);
-  	sensorFrame.setVisible(true);
+    // Get screen dimensions
+    Toolkit tk = Toolkit.getDefaultToolkit();
+    Dimension screenSize = tk.getScreenSize();
+    int screenHeight = screenSize.height;
+    int screenWidth = screenSize.width;
+
+  	f.add(sensorPanel);
+
+    Dimension dim = f.getSize();
+    f.setLocation(0, screenHeight - dim.height);
+
+    f.setResizable(false);
+  	f.setVisible(true);
   }
 
   private void rufeSliderMitTextfeldAuf() {
-  	try {
-	    // Quelle des Bildes:
-	    // http://www.pce-instruments.com/deutsch/messtechnik-im-online-handel/messgeraete-fuer-alle-parameter/handtachometer-wachendorff-prozesstechnik-gmbh-laser-handtachometer-pce-155-det_11639.htm
-	    icon = bildkonf.getImageIcon("Sensor");
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  	sensorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-  	sensorFrame.setSize(400, 400);
+    // icon = bildkonf.getImageIcon("Sensor");
+
+  	f.setSize(400, 400);
 
   	sensorPanel.setLayout(null);
   	sensorPanel.setSize(400, 200);

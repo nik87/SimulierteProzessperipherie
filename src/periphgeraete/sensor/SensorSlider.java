@@ -1,16 +1,14 @@
 package periphgeraete.sensor;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.*;
 import java.io.IOException;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
+import java.io.File;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -22,7 +20,6 @@ import werkzeug.BildImplementierung;
  * der zum Einstellen der Temperatur genutzt wird.
  *
  * @author Niklas Knauer
- *
  */
 public class SensorSlider extends JFrame implements MouseListener {
 
@@ -31,7 +28,7 @@ public class SensorSlider extends JFrame implements MouseListener {
 
   private ImageIcon icon;
 
-  private JFrame sensorFrame = new JFrame("SensorSlider");
+  private JFrame f;
   private JPanel sensorPanel = new JPanel();
   private JLabel sensorLabel = new JLabel();
   private JLabel sensorLabel1 = new JLabel("min");
@@ -52,75 +49,85 @@ public class SensorSlider extends JFrame implements MouseListener {
    * in der GUI ein zu stellen.
    */
   public SensorSlider() {
+    f = new JFrame("SensorSlider");
 
     try {
-	    // Quelle des Bildes:
-	    // http://www.pce-instruments.com/deutsch/messtechnik-im-online-handel/messgeraete-fuer-alle-parameter/handtachometer-wachendorff-prozesstechnik-gmbh-laser-handtachometer-pce-155-det_11639.htm
-	    icon = bildkonf.getImageIcon("Sensor");
-    } catch (IOException e) {
-      e.printStackTrace();
+      icon = bildkonf.getImageIcon("Sensor");
+    } catch(IOException ex) {
+      ex.printStackTrace();
     }
 
-    sensorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    sensorFrame.setSize(265, 200);
+    sensorPanel.setLayout(null);
+    sensorPanel.setSize(250, 200);
+    sensorPanel.setBackground(Color.GRAY);
+    aktuelleTemp.setBounds(100, 115, 25, 20);
 
-  	sensorPanel.setLayout(null);
-  	sensorPanel.setSize(250, 200);
-  	sensorPanel.setBackground(Color.GRAY);
-  	aktuelleTemp.setBounds(100, 115, 25, 20);
+    setSliderMinTemp.setBounds(100, 80, 30, 25);
+    setSliderMinTemp.setBackground(Color.green);
+    setSliderMinTemp.addMouseListener(this);
+    setSliderMaxTemp.setBounds(140, 80, 30, 25);
+    setSliderMaxTemp.setBackground(Color.RED);
+    setSliderMaxTemp.addMouseListener(this);
 
-  	setSliderMinTemp.setBounds(100, 80, 30, 25);
-  	setSliderMinTemp.setBackground(Color.green);
-  	setSliderMinTemp.addMouseListener(this);
-  	setSliderMaxTemp.setBounds(140, 80, 30, 25);
-  	setSliderMaxTemp.setBackground(Color.RED);
-  	setSliderMaxTemp.addMouseListener(this);
-
-  	listener = new ChangeListener() {
+    listener = new ChangeListener() {
       @Override
-	    public void stateChanged(ChangeEvent event) {
-  		  // Textfeld aktualisieren, wenn sich Schieberegler aendert
+      public void stateChanged(ChangeEvent event) {
+        // Textfeld aktualisieren, wenn sich Schieberegler aendert
 
-    		JSlider source = (JSlider) event.getSource();
-    		aktuelleTemp.setText(String.valueOf(source.getValue()));
-    		minimum = Integer.parseInt(setSliderMinTemp.getText());
-    		maximum = Integer.parseInt(setSliderMaxTemp.getText());
+        JSlider source = (JSlider) event.getSource();
+        aktuelleTemp.setText(String.valueOf(source.getValue()));
+        minimum = Integer.parseInt(setSliderMinTemp.getText());
+        maximum = Integer.parseInt(setSliderMaxTemp.getText());
 
-    		sensorSlider.setMinimum(minimum);
-    		sensorSlider.setMaximum(maximum);
+        sensorSlider.setMinimum(minimum);
+        sensorSlider.setMaximum(maximum);
 
-    		senorR.setTemperatur(source.getValue());
-    		senorR.printTemp();
+        senorR.setTemperatur(source.getValue());
+        senorR.printTemp();
       }
     };
 
     // Teilstriche werden angezeigt
-  	sensorSlider.setPaintTicks(true);
+    sensorSlider.setPaintTicks(true);
 
     // setzt Teilstriche bei Vielfachen der Einheit
-  	sensorSlider.setMajorTickSpacing(20);
-  	sensorSlider.setMinorTickSpacing(5);
+    sensorSlider.setMajorTickSpacing(20);
+    sensorSlider.setMinorTickSpacing(5);
 
-  	sensorSlider.setBounds(0, 101, 100, 50);
-  	sensorSlider.addChangeListener(listener);
+    sensorSlider.setBounds(0, 101, 100, 50);
+    sensorSlider.addChangeListener(listener);
 
-  	bildkonf.skalieren(icon);
-  	sensorLabel.setBounds(0, 0, 100, 100);
-  	sensorLabel1.setBounds(100, 60, 70, 20);
-  	sensorLabel2.setBounds(140,60,70,20);
-  	sensorLabel3.setBounds(130, 115, 120, 20);
-  	sensorLabel.setIcon(icon);
+    // bildkonf.skalieren(icon);
+    sensorLabel.setBounds(0, 0, 100, 100);
+    sensorLabel1.setBounds(100, 60, 70, 20);
+    sensorLabel2.setBounds(140,60,70,20);
+    sensorLabel3.setBounds(130, 115, 120, 20);
+    // sensorLabel.setIcon(icon);
 
-  	sensorPanel.add(setSliderMinTemp);
-  	sensorPanel.add(setSliderMaxTemp);
-  	sensorPanel.add(aktuelleTemp);
-  	sensorPanel.add(sensorLabel);
-  	sensorPanel.add(sensorLabel1);
-  	sensorPanel.add(sensorLabel2);
-  	sensorPanel.add(sensorLabel3);
-  	sensorPanel.add(sensorSlider);
-  	sensorFrame.add(sensorPanel);
-  	sensorFrame.setVisible(true);
+    sensorPanel.add(setSliderMinTemp);
+    sensorPanel.add(setSliderMaxTemp);
+    sensorPanel.add(aktuelleTemp);
+    sensorPanel.add(sensorLabel);
+    sensorPanel.add(sensorLabel1);
+    sensorPanel.add(sensorLabel2);
+    sensorPanel.add(sensorLabel3);
+    sensorPanel.add(sensorSlider);
+
+    // Get screen dimensions
+    Toolkit tk = Toolkit.getDefaultToolkit();
+    Dimension screenSize = tk.getScreenSize();
+    int screenHeight = screenSize.height;
+    int screenWidth = screenSize.width;
+
+    f.add(sensorPanel);
+    f.setSize(265, 200);
+
+    Dimension dim = f.getSize();
+    f.setLocation(0, screenHeight/2 - dim.height);
+
+    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    f.setResizable(false);
+    f.setVisible(true);
   }
 
   /**
@@ -131,19 +138,13 @@ public class SensorSlider extends JFrame implements MouseListener {
    * @param maximumSkala
    */
   public SensorSlider(int minimumSkala, int maximumSkala) {
-  	minimum = minimumSkala;
-  	maximum = maximumSkala;
+    minimum = minimumSkala;
+    maximum = maximumSkala;
 
-  	try {
-	    // Quelle des Bildes:
-	    // http://www.pce-instruments.com/deutsch/messtechnik-im-online-handel/messgeraete-fuer-alle-parameter/handtachometer-wachendorff-prozesstechnik-gmbh-laser-handtachometer-pce-155-det_11639.htm
-	    icon = bildkonf.getImageIcon("Sensor");
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    // icon = bildkonf.getImageIcon("Sensor");
 
-    sensorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    sensorFrame.setSize(200, 200);
+    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    f.setSize(200, 200);
 
     sensorPanel.setLayout(null);
     sensorPanel.setSize(200, 200);
@@ -151,40 +152,42 @@ public class SensorSlider extends JFrame implements MouseListener {
     aktuelleTemp.setBounds(100, 115, 25, 20);
 
     listener = new ChangeListener() {
-	    @Override
-	    public void stateChanged(ChangeEvent event) {
-    		// Textfeld aktualisieren, wenn sich Schieberegler aendert
-    		JSlider source = (JSlider) event.getSource();
-    		aktuelleTemp.setText(String.valueOf(source.getValue()));
+      @Override
+      public void stateChanged(ChangeEvent event) {
+        // Textfeld aktualisieren, wenn sich Schieberegler aendert
+        JSlider source = (JSlider) event.getSource();
+        aktuelleTemp.setText(String.valueOf(source.getValue()));
 
-    		senorR.setTemperatur(source.getValue());
-    		senorR.printTemp();
+        senorR.setTemperatur(source.getValue());
+        senorR.printTemp();
 
-    		sensorSlider.setMinimum(minimum);
-    		sensorSlider.setMaximum(maximum);
-	    }
+        sensorSlider.setMinimum(minimum);
+        sensorSlider.setMaximum(maximum);
+      }
     };
 
     // Teilstriche werden angezeigt
-  	sensorSlider.setPaintTicks(true);
+    sensorSlider.setPaintTicks(true);
 
     // setzt Teilstriche bei Vielfachen der Einheit
-  	sensorSlider.setMajorTickSpacing(20);
-  	sensorSlider.setMinorTickSpacing(5);
+    sensorSlider.setMajorTickSpacing(20);
+    sensorSlider.setMinorTickSpacing(5);
 
-  	sensorSlider.setBounds(0, 101, 100, 50);
+    sensorSlider.setBounds(0, 101, 100, 50);
 
-  	sensorSlider.addChangeListener(listener);
+    sensorSlider.addChangeListener(listener);
 
-  	bildkonf.skalieren(icon);
-  	sensorLabel.setBounds(0, 0, 100, 100);
-  	sensorLabel.setIcon(icon);
+    // bildkonf.skalieren(icon);
+    sensorLabel.setBounds(0, 0, 100, 100);
+    // sensorLabel.setIcon(icon);
 
-  	sensorPanel.add(aktuelleTemp);
-  	sensorPanel.add(sensorLabel);
-  	sensorPanel.add(sensorSlider);
-  	sensorFrame.add(sensorPanel);
-  	sensorFrame.setVisible(true);
+    sensorPanel.add(aktuelleTemp);
+    sensorPanel.add(sensorLabel);
+    sensorPanel.add(sensorSlider);
+
+    f.add(sensorPanel);
+    f.setResizable(false);
+    f.setVisible(true);
   }
 
   /**
