@@ -1,0 +1,27 @@
+<project name="simpleCompile" default="run" basedir=".">
+
+  <property name="build.dir" value="bin" />
+  <property name="lib.dir"   value="lib" />
+  <property name="src.dir"   value="src" />
+
+  <target name="clean">
+    <delete dir="${build.dir}" />
+  </target>
+
+  <target name="makedir" depends="clean">
+    <mkdir dir="${build.dir}" />
+  </target>
+
+  <target name="compile" depends="makedir">
+    <javac includeantruntime="true" srcdir="${src.dir}" destdir="${build.dir}" classpath="${junit.jar}"/>
+  </target>
+
+  <target name="run" depends="compile">
+    <java fork="true" classname="main">
+      <classpath>
+        <path location="${build.dir}"/>
+      </classpath>
+    </java>
+  </target>
+
+</project>
