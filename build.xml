@@ -17,7 +17,7 @@
   </target>
 
   <target name="run" depends="compile">
-    <java fork="true" classname="main">
+    <java fork="true" classname="SimulierteProzessperipherie">
       <classpath>
         <path location="${build.dir}"/>
       </classpath>
