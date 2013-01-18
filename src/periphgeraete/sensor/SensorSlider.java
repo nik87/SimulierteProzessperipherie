@@ -1,16 +1,14 @@
 package periphgeraete.sensor;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.*;
 import java.io.IOException;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
+import java.io.File;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -22,7 +20,6 @@ import werkzeug.BildImplementierung;
  * der zum Einstellen der Temperatur genutzt wird.
  *
  * @author Niklas Knauer
- *
  */
 public class SensorSlider extends JFrame implements MouseListener {
 
@@ -31,7 +28,7 @@ public class SensorSlider extends JFrame implements MouseListener {
 
   private ImageIcon icon;
 
-  private JFrame sensorFrame;
+  private JFrame f;
   private JPanel sensorPanel = new JPanel();
   private JLabel sensorLabel = new JLabel();
   private JLabel min_Label = new JLabel("min");
@@ -39,8 +36,8 @@ public class SensorSlider extends JFrame implements MouseListener {
   private JLabel aktTemp_Label = new JLabel("aktuelle Temperatur");
   private JSlider sensorSlider = new JSlider();
   private JTextField aktuelleTemp_Tfield = new JTextField();
-  private JTextField minTemp_Tfield = new JTextField("min");
-  private JTextField maxTemp_Tfield = new JTextField("max");
+  private JTextField minTemp_Tfield = new JTextField();
+  private JTextField maxTemp_Tfield = new JTextField();
   private ChangeListener listener;
 
   BildImplementierung bildkonf = new BildImplementierung();
@@ -52,17 +49,13 @@ public class SensorSlider extends JFrame implements MouseListener {
    * in der GUI ein zu stellen.
    */
   public SensorSlider(String name) {
-	  sensorFrame = new JFrame(name);
-    try {
-	    // Quelle des Bildes:
-	    // http://www.pce-instruments.com/deutsch/messtechnik-im-online-handel/messgeraete-fuer-alle-parameter/handtachometer-wachendorff-prozesstechnik-gmbh-laser-handtachometer-pce-155-det_11639.htm
-	    icon = bildkonf.getImageIcon("Sensor");
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    f = new JFrame(name);
 
-    sensorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    sensorFrame.setSize(265, 200);
+    try {
+      icon = bildkonf.getImageIcon("Sensor");
+    } catch(IOException ex) {
+      ex.printStackTrace();
+    }
 
   	sensorPanel.setLayout(null);
   	sensorPanel.setSize(250, 200);
@@ -76,18 +69,18 @@ public class SensorSlider extends JFrame implements MouseListener {
   	maxTemp_Tfield.setBackground(Color.RED);
   	maxTemp_Tfield.addMouseListener(this);
 
-  	listener = new ChangeListener() {
+    listener = new ChangeListener() {
       @Override
-	    public void stateChanged(ChangeEvent event) {
-  		  // Textfeld aktualisieren, wenn sich Schieberegler aendert
+      public void stateChanged(ChangeEvent event) {
+        // Textfeld aktualisieren, wenn sich Schieberegler aendert
 
     		JSlider source = (JSlider) event.getSource();
     		aktuelleTemp_Tfield.setText(String.valueOf(source.getValue()));
     		minimum = Integer.parseInt(minTemp_Tfield.getText());
     		maximum = Integer.parseInt(maxTemp_Tfield.getText());
 
-    		sensorSlider.setMinimum(minimum);
-    		sensorSlider.setMaximum(maximum);
+        sensorSlider.setMinimum(minimum);
+        sensorSlider.setMaximum(maximum);
 
     		senor.setTemperatur(source.getValue());
     		senor.printTemp();
@@ -95,7 +88,7 @@ public class SensorSlider extends JFrame implements MouseListener {
     };
 
     // Teilstriche werden angezeigt
-  	sensorSlider.setPaintTicks(true);
+    sensorSlider.setPaintTicks(true);
 
     // setzt Teilstriche bei Vielfachen der Einheit
   	sensorSlider.setMajorTickSpacing(20);
@@ -105,11 +98,12 @@ public class SensorSlider extends JFrame implements MouseListener {
   	sensorSlider.addChangeListener(listener);
 
   	bildkonf.skalieren(icon);
+    sensorLabel.setIcon(icon);
   	sensorLabel.setBounds(0, 0, 100, 100);
+
   	min_Label.setBounds(100, 60, 70, 20);
   	max_Label.setBounds(140,60,70,20);
   	aktTemp_Label.setBounds(130, 115, 120, 20);
-  	sensorLabel.setIcon(icon);
 
   	sensorPanel.add(minTemp_Tfield);
   	sensorPanel.add(maxTemp_Tfield);
@@ -121,6 +115,22 @@ public class SensorSlider extends JFrame implements MouseListener {
   	sensorPanel.add(sensorSlider);
   	sensorFrame.add(sensorPanel);
   	sensorFrame.setVisible(true);
+
+    // Get screen dimensions
+    Toolkit tk = Toolkit.getDefaultToolkit();
+    Dimension screenSize = tk.getScreenSize();
+    int screenHeight = screenSize.height;
+    int screenWidth = screenSize.width;
+
+    f.add(sensorPanel);
+    f.setSize(265, 200);
+
+    Dimension dim = f.getSize();
+    f.setLocation(0, screenHeight/2 - dim.height);
+
+    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    f.setResizable(false);
+    f.setVisible(true);
   }
 
   /**
@@ -131,19 +141,16 @@ public class SensorSlider extends JFrame implements MouseListener {
    * @param maximumSkala
    */
   public SensorSlider(int minimumSkala, int maximumSkala) {
-  	minimum = minimumSkala;
-  	maximum = maximumSkala;
+    minimum = minimumSkala;
+    maximum = maximumSkala;
 
-  	try {
-	    // Quelle des Bildes:
-	    // http://www.pce-instruments.com/deutsch/messtechnik-im-online-handel/messgeraete-fuer-alle-parameter/handtachometer-wachendorff-prozesstechnik-gmbh-laser-handtachometer-pce-155-det_11639.htm
-	    icon = bildkonf.getImageIcon("Sensor");
-    } catch (IOException e) {
-      e.printStackTrace();
+    try {
+      icon = bildkonf.getImageIcon("Sensor");
+    } catch(IOException ex) {
+      ex.printStackTrace();
     }
 
-    sensorFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    sensorFrame.setSize(200, 200);
+
 
     sensorPanel.setLayout(null);
     sensorPanel.setSize(200, 200);
@@ -152,9 +159,9 @@ public class SensorSlider extends JFrame implements MouseListener {
 
     listener = new ChangeListener() {
 	    @Override
-	    public void stateChanged(ChangeEvent event) {
+	    public void stateChanged(ChangeEvent e) {
     		// Textfeld aktualisieren, wenn sich Schieberegler aendert
-    		JSlider source = (JSlider) event.getSource();
+    		JSlider source = (JSlider) e.getSource();
     		aktuelleTemp_Tfield.setText(String.valueOf(source.getValue()));
 
     		senor.setTemperatur(source.getValue());
@@ -166,30 +173,36 @@ public class SensorSlider extends JFrame implements MouseListener {
     };
 
     // Teilstriche werden angezeigt
-  	sensorSlider.setPaintTicks(true);
+    sensorSlider.setPaintTicks(true);
 
     // setzt Teilstriche bei Vielfachen der Einheit
-  	sensorSlider.setMajorTickSpacing(20);
-  	sensorSlider.setMinorTickSpacing(5);
+    sensorSlider.setMajorTickSpacing(20);
+    sensorSlider.setMinorTickSpacing(5);
 
-  	sensorSlider.setBounds(0, 101, 100, 50);
+    sensorSlider.setBounds(0, 101, 100, 50);
 
-  	sensorSlider.addChangeListener(listener);
+    sensorSlider.addChangeListener(listener);
 
-  	bildkonf.skalieren(icon);
-  	sensorLabel.setBounds(0, 0, 100, 100);
-  	sensorLabel.setIcon(icon);
+    bildkonf.skalieren(icon);
+    sensorLabel.setIcon(icon);
+    sensorLabel.setBounds(0, 0, 100, 100);
 
   	sensorPanel.add(aktuelleTemp_Tfield);
   	sensorPanel.add(sensorLabel);
   	sensorPanel.add(sensorSlider);
-  	sensorFrame.add(sensorPanel);
-  	sensorFrame.setVisible(true);
+
+    f.add(sensorPanel);
+    f.setSize(200, 200);
+
+    f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    f.setResizable(false);
+    f.setVisible(true);
   }
 
   /**
    * Bietet die Moeglichkeit das private Atribut der Klasse SensorRechnung
    * aus zu lesen.
+   *
    * @return  die aktuelle Temperatur
    */
   public int getAktuellenWert() {

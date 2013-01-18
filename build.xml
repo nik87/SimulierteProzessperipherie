@@ -1,19 +1,24 @@
 <project name="simpleCompile" default="run" basedir=".">
 
-  <property name="build.dir" value="bin" />
-  <property name="lib.dir"   value="lib" />
-  <property name="src.dir"   value="src" />
+  <property name="build.dir" value="bin"/>
+  <property name="lib.dir"   value="lib"/>
+  <property name="src.dir"   value="src"/>
 
   <target name="clean">
-    <delete dir="${build.dir}" />
+    <delete dir="${build.dir}"/>
   </target>
 
   <target name="makedir" depends="clean">
-    <mkdir dir="${build.dir}" />
+    <mkdir dir="${build.dir}"/>
   </target>
 
   <target name="compile" depends="makedir">
-    <javac includeantruntime="true" srcdir="${src.dir}" destdir="${build.dir}" classpath="${junit.jar}"/>
+    <javac includeantruntime="true" srcdir="${src.dir}" destdir="${build.dir}"/>
+    <copy todir="${build.dir}">
+      <fileset dir=".">
+        <include name="images/**"/>
+      </fileset>
+    </copy>
   </target>
 
   <target name="run" depends="compile">

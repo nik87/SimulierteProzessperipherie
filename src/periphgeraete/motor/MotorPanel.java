@@ -1,90 +1,78 @@
-/**
- * 
- */
 package periphgeraete.motor;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Toolkit;
+import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import werkzeug.BildImplementierung;
 
 /**
  * @author KingLui
- * 
  */
 public class MotorPanel extends JPanel implements Runnable {
-    private Thread animation;
-    private Image arImg[];
-    private int index;
-    private MediaTracker mt;
-    private Toolkit tk;
+  private Thread animation;
+  private Image images[];
+  private int index;
 
-    public MotorPanel() {
-	setPreferredSize(new Dimension(400, 300));
-	setSize(200, 150);
-	setVisible(true);
-	startAnimation();
+  public MotorPanel() {
+    setPreferredSize(new Dimension(350, 350));
+    setSize(200, 150);
+    setBackground(Color.BLUE);
+
+    images = new Image[4];
+
+    startAnimation();
+  }
+
+  public void startAnimation() {
+    animation = new Thread(this);
+    animation.start();
+  }
+
+  @Override
+  public void run() {
+
+    for (int i = 0; i < 4; i++) {
+      URL url = getClass().getResource("/images/propeller" + i + ".jpg");
+      try {
+        images[i] = ImageIO.read(url);
+      } catch(IOException ex) {
+        ex.printStackTrace();
+      }
+      // System.out.println("url: " + url.toString());
     }
 
-    public void startAnimation() {
-	animation = new Thread(this);
-	animation.start();
+    // Animation beginnen
+    Thread me = Thread.currentThread();
+    while (animation == me) {
+      try {
+        Thread.sleep(50);
+      } catch (InterruptedException ex) {
+        break;
+      }
+      synchronized (this) {
+        index++;
+        // System.out.println("index: " + index);
+        if (index >= images.length) index = 0;
+      }
+      repaint();
     }
+  }
 
-    public void run() {
-	// Bilder laden
-	arImg = new Image[2];
-	mt = new MediaTracker(this);
-	tk = getToolkit();
-	for (int i = 0; i < 2; i++) {
-	    arImg[i] = tk.getImage("/bilder/propeller" + i + ".gif");
-	    mt.addImage(arImg[i], 1);
-	   
-	    System.out.println("armIMg" + arImg[i]);
-	    try {
+  @Override
+  public void paintComponent(Graphics g) {
+    super.paintComponent(g);
 
-		mt.waitForID(1);
-	    } catch (InterruptedException e) {
-		// nothing
-		System.out.println("Fehler beim warten");
-	    }
-	}
-	// Animation beginnen
-	Thread me = Thread.currentThread();
-	while (animation == me) {
-	    try {
-		Thread.sleep(50);
-	    } catch (InterruptedException e) {
-		break;
-	    }
-	    synchronized (this) {
-		index++;
-		System.out.println("index: " + index);
-		if (index >= arImg.length) {
-		    index = 0;
-		    System.out.println("index 0: " + index);
-		}
-	    }
-	    repaint();
-	}
-    }
+    // provide a better graphics class
+    Graphics2D g2 = (Graphics2D) g.create();
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_ON);
 
-    public void paint(Graphics g) {
-	
-	if ((mt.statusAll(false) &MediaTracker.ERRORED) != 0) {
-	    g.setColor(Color.RED);
-	    g.fillRect(0, 0, getWidth(), getHeight());
-	    return;
-	}
-	if (mt.statusID(1, true) == MediaTracker.COMPLETE) {
-	    g.drawImage(arImg[index], 10, 10, this);
-	}
+    g2.drawImage(images[index], 0, 0, null);
 
-    }
+    g2.dispose();
+  }
 }
