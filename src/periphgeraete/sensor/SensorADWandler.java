@@ -37,10 +37,10 @@ public class SensorADWandler {
   private JSpinner spinnerAufl = new JSpinner(new SpinnerNumberModel(8, 8, 12, 2));
   private JSpinner spinnerMaxTemp = new JSpinner(new SpinnerNumberModel(0,0,100,1));
   private JSpinner spinnerBerTemp = new JSpinner(new SpinnerNumberModel(5,1,10,3));
-  private JTextField sensorEingabe = new JTextField("TempWert?");
+  private JTextField sensorEingabe = new JTextField();
   private JTextField aktuelleTemp = new JTextField();
-  private JTextField setSliderMinTemp = new JTextField("min");
-  private JTextField setSliderMaxTemp = new JTextField("max");
+  private JTextField setSliderMinTemp = new JTextField();
+  private JTextField setSliderMaxTemp = new JTextField();
   private ChangeListener listener;
   private ChangeListener spinnerListener;
 
@@ -64,7 +64,11 @@ public class SensorADWandler {
   }
 
   private void rufeEingabeMitTextfeldAuf() {
-    // icon = bildkonf.getImageIcon("Sensor");
+    try {
+      icon = bildkonf.getImageIcon("Sensor");
+    } catch(IOException ex) {
+      ex.printStackTrace();
+    }
 
   	f.setSize(400, 200);
 
@@ -74,16 +78,16 @@ public class SensorADWandler {
 
   	sensorEingabe.setBounds(40, 100, 70, 20);
 
-  	// bildkonf.skalieren(icon);
-    // sensorLabel.setIcon(icon);
-  	sensorLabel.setBounds(25, 0, 100, 100);
+  	bildkonf.skalieren(icon);
+    sensorLabel.setIcon(icon);
+  	sensorLabel.setBounds(0, 0, 100, 100);
 
-  	spinnerLabel1.setBounds(130, 10, 70, 20);
-  	spinnerLabel2.setBounds(130,32,70,20);
+  	spinnerLabel1.setBounds(130, 10, 100, 20);
+  	spinnerLabel2.setBounds(130, 32, 100, 20);
   	spinnerLabel3.setBounds(130, 54, 110, 20);
-  	spinnerLabel4.setBounds(305,10,70,20);
-  	spinnerLabel5.setBounds(305,32,70,20);
-  	spinnerLabel6.setBounds(305, 54, 70, 20);
+  	spinnerLabel4.setBounds(305, 10,  70, 20);
+  	spinnerLabel5.setBounds(305, 32,  70, 20);
+  	spinnerLabel6.setBounds(305, 54,  70, 20);
 
   	spinnerAufl.setBounds(250, 10, 50, 20);
   	spinnerAufl.addChangeListener(new ActionListenerForBedienElement());

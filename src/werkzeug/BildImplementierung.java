@@ -11,10 +11,10 @@ import javax.swing.ImageIcon;
 public class BildImplementierung {
 
 	public ImageIcon getImageIcon(String filename) throws IOException {
-		URL rurl = getClass().getResource("/images/" + filename + ".gif");
-		Image image = ImageIO.read(rurl);
+		URL url = getClass().getResource("/images/" + filename + ".gif");
+		Image image = ImageIO.read(url);
 		ImageIcon icon = new ImageIcon(image);
-
+		// System.out.println("url: " + url.toString());
 		return icon;
 	}
 

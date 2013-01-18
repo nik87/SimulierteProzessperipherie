@@ -36,8 +36,8 @@ public class SensorSlider extends JFrame implements MouseListener {
   private JLabel sensorLabel3 = new JLabel("aktuelle Temperatur");
   private JSlider sensorSlider = new JSlider();
   private JTextField aktuelleTemp = new JTextField();
-  private JTextField setSliderMinTemp = new JTextField("min");
-  private JTextField setSliderMaxTemp = new JTextField("max");
+  private JTextField setSliderMinTemp = new JTextField();
+  private JTextField setSliderMaxTemp = new JTextField();
   private ChangeListener listener;
 
   BildImplementierung bildkonf = new BildImplementierung();
@@ -97,12 +97,12 @@ public class SensorSlider extends JFrame implements MouseListener {
     sensorSlider.setBounds(0, 101, 100, 50);
     sensorSlider.addChangeListener(listener);
 
-    // bildkonf.skalieren(icon);
+    bildkonf.skalieren(icon);
+    sensorLabel.setIcon(icon);
     sensorLabel.setBounds(0, 0, 100, 100);
     sensorLabel1.setBounds(100, 60, 70, 20);
     sensorLabel2.setBounds(140,60,70,20);
     sensorLabel3.setBounds(130, 115, 120, 20);
-    // sensorLabel.setIcon(icon);
 
     sensorPanel.add(setSliderMinTemp);
     sensorPanel.add(setSliderMaxTemp);
@@ -141,7 +141,11 @@ public class SensorSlider extends JFrame implements MouseListener {
     minimum = minimumSkala;
     maximum = maximumSkala;
 
-    // icon = bildkonf.getImageIcon("Sensor");
+    try {
+      icon = bildkonf.getImageIcon("Sensor");
+    } catch(IOException ex) {
+      ex.printStackTrace();
+    }
 
     f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     f.setSize(200, 200);
@@ -177,9 +181,9 @@ public class SensorSlider extends JFrame implements MouseListener {
 
     sensorSlider.addChangeListener(listener);
 
-    // bildkonf.skalieren(icon);
+    bildkonf.skalieren(icon);
+    sensorLabel.setIcon(icon);
     sensorLabel.setBounds(0, 0, 100, 100);
-    // sensorLabel.setIcon(icon);
 
     sensorPanel.add(aktuelleTemp);
     sensorPanel.add(sensorLabel);

@@ -40,7 +40,7 @@ public class Motor {
     f.setVisible(true);
   }
 
-  public  void setDrehrichtungLinks(String linksDrehen) {
+  public void setDrehrichtungLinks(String linksDrehen) {
     this.linksDrehen = linksDrehen;
   }
 

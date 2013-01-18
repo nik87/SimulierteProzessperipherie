@@ -1,7 +1,10 @@
 package periphgeraete.motor;
 
 import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import werkzeug.BildImplementierung;
@@ -11,15 +14,16 @@ import werkzeug.BildImplementierung;
  */
 public class MotorPanel extends JPanel implements Runnable {
   private Thread animation;
-  private Image arImg[];
+  private Image images[];
   private int index;
-  private MediaTracker mt;
-  private Toolkit tk;
 
   public MotorPanel() {
-    setPreferredSize(new Dimension(400, 300));
+    setPreferredSize(new Dimension(350, 350));
     setSize(200, 150);
     setBackground(Color.BLUE);
+
+    images = new Image[4];
+
     startAnimation();
   }
 
@@ -30,20 +34,15 @@ public class MotorPanel extends JPanel implements Runnable {
 
   @Override
   public void run() {
-    arImg = new Image[2];
-    mt = new MediaTracker(this);
-    tk = getToolkit();
-    for (int i = 0; i < 2; i++) {
-      arImg[i] = tk.getImage("/images/propeller" + i + ".gif");
-      mt.addImage(arImg[i], 1);
 
-      // System.out.println("armIMg" + arImg[i]);
-
+    for (int i = 0; i < 4; i++) {
+      URL url = getClass().getResource("/images/propeller" + i + ".jpg");
       try {
-        mt.waitForID(1);
-      } catch (InterruptedException ex) {
-        System.out.println("Fehler beim warten");
+        images[i] = ImageIO.read(url);
+      } catch(IOException ex) {
+        ex.printStackTrace();
       }
+      // System.out.println("url: " + url.toString());
     }
 
     // Animation beginnen
@@ -57,10 +56,7 @@ public class MotorPanel extends JPanel implements Runnable {
       synchronized (this) {
         index++;
         // System.out.println("index: " + index);
-        if (index >= arImg.length) {
-          index = 0;
-          // System.out.println("index 0: " + index);
-        }
+        if (index >= images.length) index = 0;
       }
       repaint();
     }
@@ -75,7 +71,7 @@ public class MotorPanel extends JPanel implements Runnable {
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                         RenderingHints.VALUE_ANTIALIAS_ON);
 
-    // TODO
+    g2.drawImage(images[index], 0, 0, null);
 
     g2.dispose();
   }

@@ -21,16 +21,20 @@ public class SensorTeingabe extends JFrame {
   private JFrame f;
   private JPanel sensorPanel = new JPanel();
   private JLabel sensorLabel = new JLabel();
-  private JTextField sensorEingabe = new JTextField("TempWert?");
+  private JTextField sensorEingabe = new JTextField();
   private SensorRechnen senorR = new SensorRechnen();
-  private BildImplementierung bildkonf;
+  private BildImplementierung bildkonf = new BildImplementierung();
 
   /**
    * Standardkonstruktor der Klasse SensorJFrame. Liesst den eingetragenden
    * Wert aus und gibt ihn in der Konsole aus.
    */
   public SensorTeingabe() {
-    // icon = bildkonf.getImageIcon("Sensor");
+    try {
+      icon = bildkonf.getImageIcon("Sensor");
+    } catch(IOException ex) {
+      ex.printStackTrace();
+    }
 
     f = new JFrame("SensorTextfeld");
 
@@ -38,9 +42,11 @@ public class SensorTeingabe extends JFrame {
     sensorPanel.setSize(200, 200);
     sensorPanel.setBackground(Color.GRAY);
     sensorEingabe.setBounds(10, 100, 70, 20);
-    // bildkonf.skalieren(icon);
+
+    bildkonf.skalieren(icon);
+    sensorLabel.setIcon(icon);
     sensorLabel.setBounds(0, 0, 100, 100);
-    // sensorLabel.setIcon(icon);
+
     sensorPanel.add(sensorEingabe);
     sensorPanel.add(sensorLabel);
 
@@ -87,10 +93,7 @@ public class SensorTeingabe extends JFrame {
     public void keyTyped(KeyEvent e) {}
 
     @Override
-    public void mouseClicked(MouseEvent e) {
-      if (sensorEingabe.getText().equals("TempWert?"))
-      sensorEingabe.setText("");
-    }
+    public void mouseClicked(MouseEvent e) {}
 
     @Override
     public void mouseEntered(MouseEvent e) {}

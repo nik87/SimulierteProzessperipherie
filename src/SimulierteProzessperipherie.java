@@ -7,16 +7,16 @@ import periphgeraete.sensor.*;
 public class SimulierteProzessperipherie {
 
 	public static void main(String[] args) {
-		// SensorJFrame sj = new SensorJFrame();
-		SensorTeingabe st = new SensorTeingabe();
-		SensorSlider sl = new SensorSlider();
-		SensorADWandler sw = new SensorADWandler("textfield");
+		Sensor 					sensor  = new Sensor();
+		SensorTeingabe 	sensorT = new SensorTeingabe();
+		SensorSlider 		sensorS = new SensorSlider();
+		SensorADWandler sensorA = new SensorADWandler("textfield");
 
-		Sinus s = new Sinus(24,10,0);
+		Sinus sinus = new Sinus(24,10,0);
 
-		Motor m = new Motor();
+		Motor motor = new Motor();
 
-		st.print();
-		sw.print();
+		sensorT.print();
+		sensorA.print();
 	}
 }
