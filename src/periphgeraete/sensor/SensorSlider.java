@@ -113,8 +113,6 @@ public class SensorSlider extends JFrame implements MouseListener {
   	sensorPanel.add(max_Label);
   	sensorPanel.add(aktTemp_Label);
   	sensorPanel.add(sensorSlider);
-  	sensorFrame.add(sensorPanel);
-  	sensorFrame.setVisible(true);
 
     // Get screen dimensions
     Toolkit tk = Toolkit.getDefaultToolkit();
